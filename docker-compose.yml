@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: ncuser
+      POSTGRES_PASSWORD: ncpass
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  app:
+    image: nextcloud:latest
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: ncuser
+      POSTGRES_PASSWORD: ncpass
+    depends_on:
+      - db
+    volumes:
+      - nc-data:/var/www/html
+
+volumes:
+  db-data:
+  nc-data:
